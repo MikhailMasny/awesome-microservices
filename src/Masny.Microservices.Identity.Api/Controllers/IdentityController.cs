@@ -8,11 +8,11 @@ namespace Masny.Microservices.Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class IdentityController : ControllerBase
     {
         private readonly IJwtService _jwtService;
 
-        public AccountController(IJwtService jwtService)
+        public IdentityController(IJwtService jwtService)
         {
             _jwtService = jwtService ?? throw new ArgumentNullException(nameof(jwtService));
         }

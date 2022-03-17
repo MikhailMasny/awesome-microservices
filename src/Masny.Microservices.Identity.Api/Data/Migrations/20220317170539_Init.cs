@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Masny.Microservices.Profile.Api.Migrations
+namespace Masny.Microservices.Identity.Api.Data.Migrations
 {
     public partial class Init : Migration
     {

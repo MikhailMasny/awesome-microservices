@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Masny.Microservices.Profile.Api.Contracts.Requests;
+using Masny.Microservices.Profile.Api.Contracts.Responses;
+using Masny.Microservices.Profile.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace Masny.Microservices.Profile.Api.Controllers
 {
@@ -8,55 +9,40 @@ namespace Masny.Microservices.Profile.Api.Controllers
     [ApiController]
     public class ProfileController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IProfileManager _profileManager;
 
-        public ProfileController(UserManager<IdentityUser> userManager)
+        public ProfileController(IProfileManager profileManager)
         {
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _profileManager = profileManager ?? throw new ArgumentNullException(nameof(profileManager));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        [HttpGet("{accountId}")]
+        public async Task<IActionResult> Get(string accountId)
         {
-            if (ModelState.IsValid)
+            var result = await _profileManager.ReadAsync(accountId);
+            if (result.Id == 0)
             {
-                IdentityUser user = new IdentityUser { Email = model.Email, UserName = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
+                return NotFound();
             }
-            return BadRequest(model);
+
+            var profileDataResponse = new ProfileResponse
+            {
+                Id = result.Id,
+                AccountId = result.AccountId,
+                FullName = result.FullName,
+            };
+
+            return Ok(profileDataResponse);
         }
 
-        public class RegisterViewModel
+        [HttpPut("{accountId}")]
+        public async Task<IActionResult> Put(string accountId, [FromBody] UpdateProfileRequest request)
         {
-            [Required]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
+            var result = await _profileManager.UpdateAsync(accountId, request.FullName);
 
-            [Required]
-            [Display(Name = "Год рождения")]
-            public int Year { get; set; }
-
-            [Required]
-            [DataType(DataType.Password)]
-            [Display(Name = "Пароль")]
-            public string Password { get; set; }
-
-            [Required]
-            [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-            [DataType(DataType.Password)]
-            [Display(Name = "Подтвердить пароль")]
-            public string PasswordConfirm { get; set; }
+            return result 
+                ? Ok()
+                : BadRequest();
         }
     }
 }

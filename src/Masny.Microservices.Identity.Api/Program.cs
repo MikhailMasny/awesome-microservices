@@ -1,6 +1,9 @@
-﻿using Masny.Microservices.Identity.Api.Interfaces;
-using Masny.Microservices.Identity.Api.Services;
-using Masny.Microservices.Identity.Api.Settings;
+﻿using Masny.Microservices.Auth.Interfaces;
+using Masny.Microservices.Auth.Services;
+using Masny.Microservices.Identity.Api.Data;
+using Masny.Microservices.Identity.Api.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 // serilog, fluentvalidation; optional: identityserver4
 
@@ -11,33 +14,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Custom services
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddDbContext<ApplicationContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationContext>();
+
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.RequireHttpsMetadata = false;
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            // укзывает, будет ли валидироваться издатель при валидации токена
-//            ValidateIssuer = true,
-//            // строка, представляющая издателя
-//            ValidIssuer = AuthOptions.ISSUER,
-
-//            // будет ли валидироваться потребитель токена
-//            ValidateAudience = true,
-//            // установка потребителя токена
-//            ValidAudience = AuthOptions.AUDIENCE,
-//            // будет ли валидироваться время существования
-//            ValidateLifetime = true,
-
-//            // установка ключа безопасности
-//            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-//            // валидация ключа безопасности
-//            ValidateIssuerSigningKey = true,
-//        };
-//    });
+builder.Services.AddEventBusService(builder.Configuration);
 
 var app = builder.Build();
 
@@ -48,9 +33,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-//app.UseAuthentication();
-//app.UseAuthorization();
 
 app.MapControllers();
 

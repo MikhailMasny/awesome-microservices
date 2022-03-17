@@ -1,13 +1,12 @@
-using Masny.Microservices.Profile.Api.Data;
-using Microsoft.AspNetCore.Identity;
+﻿using Masny.Microservices.Profile.Api.Data;
+using Masny.Microservices.Profile.Api.Extensions;
+using Masny.Microservices.Profile.Api.Interfaces;
+using Masny.Microservices.Profile.Api.Managers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -15,12 +14,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationContext>();
+builder.Services.AddEventBusService(builder.Configuration, builder.Environment);
+
+builder.Services.AddScoped<IProfileManager, ProfileManager>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -28,8 +27,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

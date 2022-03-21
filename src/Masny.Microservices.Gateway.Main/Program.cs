@@ -9,8 +9,6 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
 
-Log.Information("Starting up");
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
@@ -18,7 +16,6 @@ builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
     .ReadFrom.Configuration(context.Configuration));
 
 // Microsoft services
-builder.Services.AddHealthChecks();
 builder.Services.AddCors();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -56,7 +53,10 @@ var app = builder.Build();
 // dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p { password here }
 // dotnet dev-certs https --trust
 
-//app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseSerilogRequestLogging();
 
@@ -64,8 +64,6 @@ app.UseCors(options => options
     .AllowAnyOrigin()
     .AllowAnyHeader()
     .AllowAnyMethod());
-
-app.MapHealthChecks("/hc");
 
 app.UseOcelot().Wait();
 

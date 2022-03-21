@@ -47,7 +47,6 @@ services:
         ports: 
             - "5011:80"
         environment:
-            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=IdentityApi;User Id=sa; Password=yourStrongPassword12!@;MultipleActiveResultSets=true
             - EventBusSettings__Host=rabbitmq
             - EventBusSettings__Port=5672
             - EventBusSettings__VirtualHost=/
@@ -64,8 +63,9 @@ services:
         build:
             context: ./src
             dockerfile: ./Masny.Microservices.Profile.Api/Dockerfile
+        ports:
+            - "5046:80" 
         environment:
-            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ProfileApi;User Id=sa; Password=yourStrongPassword12!@;MultipleActiveResultSets=true
             - EventBusSettings__Host=rabbitmq
             - EventBusSettings__Port=5672
             - EventBusSettings__VirtualHost=/
@@ -89,6 +89,17 @@ services:
             - masny-microservices-network
         depends_on:
             - seq
+
+    webstatus:
+        container_name: webstatus
+        build:
+            context: ./src
+            dockerfile: ./Masny.Microservices.WebStatus/Dockerfile
+        ports:
+            - "5269:80"
+        restart: on-failure
+        networks: 
+            - masny-microservices-network
 
 networks:
     masny-microservices-network:

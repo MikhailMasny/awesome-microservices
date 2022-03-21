@@ -5,14 +5,17 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Serilog;
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
+Log.Information("Starting up");
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.ClearProviders();
-var logger = new LoggerConfiguration()
+builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
     .WriteTo.Console()
-    .CreateLogger();
-
-builder.Logging.AddSerilog(logger);
+    .ReadFrom.Configuration(context.Configuration));
 
 // Microsoft services
 builder.Services.AddHealthChecks();
@@ -54,6 +57,8 @@ var app = builder.Build();
 // dotnet dev-certs https --trust
 
 //app.UseHttpsRedirection();
+
+app.UseSerilogRequestLogging();
 
 app.UseCors(options => options
     .AllowAnyOrigin()

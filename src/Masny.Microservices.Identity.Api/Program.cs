@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
-// fluentvalidation; optional: identityserver4, errorhandler, controller results, seq
+// fluentvalidation; optional: identityserver4, errorhandler, controller results
 
 var builder = WebApplication.CreateBuilder(args);
 

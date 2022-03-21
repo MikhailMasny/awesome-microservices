@@ -1,4 +1,4 @@
-﻿namespace Masny.Microservices.Common.Settings
+﻿namespace Masny.Microservices.EventBus.Settings
 {
     /// <summary>
     /// RabbitMQ event bus settings.
@@ -8,22 +8,22 @@
         /// <summary>
         /// RabbitMQ host name.
         /// </summary>
-        public string HostName { get; set; }
+        public string Host { get; set; }
 
         /// <summary>
-        /// Event bus (RabbitMQ-based) docker host name.
+        /// Port.
         /// </summary>
-        public string DockerHostName { get; set; }
+        public ushort Port { get; set; }
 
         /// <summary>
         /// Event bus (RabbitMQ-based) virtual host name.
         /// </summary>
-        public string VirtualHostName { get; set; }
+        public string VirtualHost { get; set; }
 
         /// <summary>
         /// RabbitMQ user name.
         /// </summary>
-        public string UserName { get; set; }
+        public string User { get; set; }
 
         /// <summary>
         /// RabbitMQ password

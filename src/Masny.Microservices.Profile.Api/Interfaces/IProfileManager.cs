@@ -9,7 +9,8 @@
         /// Add.
         /// </summary>
         /// <param name="accountId">Account identifier.</param>
-        Task CreateAsync(string accountId);
+        /// <param name="fullName">Full name.</param>
+        Task CreateAsync(string accountId, string fullName);
 
         /// <summary>
         /// Get.

@@ -1,4 +1,4 @@
-﻿namespace Masny.Microservices.Common
+﻿namespace Masny.Microservices.EventBus.Models
 {
     /// <summary>
     /// Define class for message broker events.

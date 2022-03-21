@@ -1,5 +1,6 @@
-﻿using Masny.Microservices.Auth.Interfaces;
-using Masny.Microservices.Common.Events;
+﻿using Masny.Microservices.Auth.Constants;
+using Masny.Microservices.Auth.Interfaces;
+using Masny.Microservices.EventBus.Models;
 using Masny.Microservices.Identity.Api.Contracts.Requests;
 using Masny.Microservices.Identity.Api.Contracts.Responses;
 using MassTransit;
@@ -31,10 +32,10 @@ namespace Masny.Microservices.Identity.Api.Controllers
 
         #region TEST
 
-        [HttpPost("/test")]
-        public async Task<IActionResult> TokenAsync()
+        [HttpGet("/test")]
+        public async Task<IActionResult> GetTokenAsync()
         {
-            var email = "qwe2";
+            var email = "test";
             var password = "qwe1!Q";
 
             var signInResult = await _signInManager.PasswordSignInAsync(
@@ -58,7 +59,7 @@ namespace Masny.Microservices.Identity.Api.Controllers
             var response = new AuthenticationResponse
             {
                 AccessToken = _jwtService.GetAccessToken(identity.Claims),
-                Email = identity.Name ?? string.Empty,
+                AccountId = identity.Name ?? string.Empty,
             };
 
             return Ok(response);
@@ -70,7 +71,7 @@ namespace Masny.Microservices.Identity.Api.Controllers
         public async Task<IActionResult> TokenAsync([FromBody] AuthenticationRequest request)
         {
             var signInResult = await _signInManager.PasswordSignInAsync(
-                request.Email,
+                request.Username,
                 request.Password,
                 false,
                 false);
@@ -83,21 +84,21 @@ namespace Masny.Microservices.Identity.Api.Controllers
                 });
             }
 
-            var user = await _userManager.FindByNameAsync(request.Email);
+            var user = await _userManager.FindByNameAsync(request.Username);
             var userRoles = await _userManager.GetRolesAsync(user);
             var identity = _jwtService.GetIdentity(user.Id, userRoles);
 
             var response = new AuthenticationResponse
             {
                 AccessToken = _jwtService.GetAccessToken(identity.Claims),
-                Email = identity.Name ?? string.Empty,
+                AccountId = identity.Name ?? string.Empty,
             };
 
             return Ok(response);
         }
 
 
-        [HttpPost("/register")]
+        [HttpPost("/api/identity/register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
             var user = new IdentityUser { Email = request.Email, UserName = request.UserName };
@@ -108,12 +109,13 @@ namespace Masny.Microservices.Identity.Api.Controllers
             }
 
             // UNDONE: replace to constants with use default data seed
-            await _userManager.AddToRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, AppRoles.User);
 
             await _publishEndpoint.Publish(new AccountCreated
             {
                 EventId = Guid.NewGuid(),
                 AccountId = user.Id,
+                FullName = request.FullName,
                 CreationDate = DateTime.Now,
             });
 

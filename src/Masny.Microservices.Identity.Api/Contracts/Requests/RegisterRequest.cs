@@ -16,6 +16,11 @@
         public string UserName { get; set; }
 
         /// <summary>
+        /// Full name.
+        /// </summary>
+        public string FullName { get; set; }
+
+        /// <summary>
         /// Password.
         /// </summary>
         public string Password { get; set; }

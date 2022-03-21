@@ -3,7 +3,6 @@ using Masny.Microservices.Auth.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace Masny.Microservices.Auth.Services
 {
@@ -35,7 +34,6 @@ namespace Masny.Microservices.Auth.Services
         {
             var now = DateTime.UtcNow;
 
-            // создаем JWT-токен
             var jwt = new JwtSecurityToken(
                 issuer: JwtOptions.Issuer,
                 audience: JwtOptions.Audience,

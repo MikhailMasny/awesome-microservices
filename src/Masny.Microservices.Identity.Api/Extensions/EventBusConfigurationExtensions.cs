@@ -1,4 +1,4 @@
-﻿using Masny.Microservices.Common.Settings;
+﻿using Masny.Microservices.EventBus.Settings;
 using MassTransit;
 
 namespace Masny.Microservices.Identity.Api.Extensions
@@ -16,14 +16,31 @@ namespace Masny.Microservices.Identity.Api.Extensions
         /// <returns>Configured event bus service.</returns>
         public static IServiceCollection AddEventBusService(
             this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IHostEnvironment environment)
         {
             var eventBusSettingsSection = configuration.GetSection("EventBusSettings");
             var eventBusSettings = eventBusSettingsSection.Get<EventBusSettings>();
 
             services.AddMassTransit(x =>
             {
-                x.UsingRabbitMq();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    if (environment.IsProduction())
+                    {
+                        cfg.ConfigureEndpoints(context);
+
+                        cfg.Host(
+                            eventBusSettings.Host,
+                            eventBusSettings.Port,
+                            eventBusSettings.VirtualHost,
+                            h =>
+                            {
+                                h.Username(eventBusSettings.User);
+                                h.Password(eventBusSettings.Password);
+                            });
+                    }
+                });
             });
 
             services.AddMassTransitHostedService();

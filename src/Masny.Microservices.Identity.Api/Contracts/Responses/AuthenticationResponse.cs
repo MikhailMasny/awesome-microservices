@@ -11,8 +11,8 @@
         public string AccessToken { get; set; }
 
         /// <summary>
-        /// Email.
+        /// Account identifier.
         /// </summary>
-        public string Email { get; set; }
+        public string AccountId { get; set; }
     }
 }

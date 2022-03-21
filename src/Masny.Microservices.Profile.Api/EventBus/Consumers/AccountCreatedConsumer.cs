@@ -1,4 +1,4 @@
-﻿using Masny.Microservices.Common.Events;
+﻿using Masny.Microservices.EventBus.Models;
 using Masny.Microservices.Profile.Api.Interfaces;
 using MassTransit;
 
@@ -29,7 +29,8 @@ namespace Masny.Microservices.Profile.Api.EventBus.Consumers
             try
             {
                 var accountId = context.Message.AccountId;
-                await _profileManager.CreateAsync(accountId);
+                var fullName = context.Message.FullName;
+                await _profileManager.CreateAsync(accountId, fullName);
             }
             catch (Exception ex)
             {

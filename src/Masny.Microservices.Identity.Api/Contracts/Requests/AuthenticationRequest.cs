@@ -6,9 +6,9 @@
     public class AuthenticationRequest
     {
         /// <summary>
-        /// Email.
+        /// Username.
         /// </summary>
-        public string Email { get; set; }
+        public string Username { get; set; }
 
         /// <summary>
         /// Password.

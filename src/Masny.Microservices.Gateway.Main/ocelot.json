@@ -2,15 +2,15 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/profile/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7046
+          "Host": "profile.api",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/profile/{id}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "Get", "Put" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -18,6 +18,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7053"
+    "BaseUrl": "http://localhost:5053"
   }
 }

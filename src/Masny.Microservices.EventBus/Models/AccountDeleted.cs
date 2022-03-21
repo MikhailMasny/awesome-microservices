@@ -1,4 +1,4 @@
-﻿namespace Masny.Microservices.Common.Events
+﻿namespace Masny.Microservices.EventBus.Models
 {
     /// <summary>
     /// Define message interface for account deletion.

@@ -13,13 +13,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masny.Microservices.Profile
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{C5E7D1F7-A882-46C8-8212-B1A58D8D4FB3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masny.Microservices.Common", "src\Masny.Microservices.Common\Masny.Microservices.Common.csproj", "{02B245F8-16F7-4719-94F2-72A69A43F961}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{763300BE-EBAE-4477-B865-311C310266BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masny.Microservices.Gateway.Main", "src\Masny.Microservices.Gateway.Main\Masny.Microservices.Gateway.Main.csproj", "{D66311AF-39C7-4944-A697-D267C9AD2684}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masny.Microservices.Gateway.Main", "src\Masny.Microservices.Gateway.Main\Masny.Microservices.Gateway.Main.csproj", "{D66311AF-39C7-4944-A697-D267C9AD2684}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masny.Microservices.Auth", "src\Masny.Microservices.Auth\Masny.Microservices.Auth.csproj", "{17F63104-7CCF-42C0-9D3C-90E342C1D782}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masny.Microservices.Auth", "src\Masny.Microservices.Auth\Masny.Microservices.Auth.csproj", "{17F63104-7CCF-42C0-9D3C-90E342C1D782}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B25D6313-0A66-4EE0-98A8-466992B0F004}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.gitignore = .gitignore
+		docker-compose.yml = docker-compose.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masny.Microservices.EventBus", "src\Masny.Microservices.EventBus\Masny.Microservices.EventBus.csproj", "{F422B93A-AB88-4FB9-9659-660F2B28FF70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +44,6 @@ Global
 		{21F757DA-4DC2-432F-92F3-F99CA865139B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21F757DA-4DC2-432F-92F3-F99CA865139B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21F757DA-4DC2-432F-92F3-F99CA865139B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02B245F8-16F7-4719-94F2-72A69A43F961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02B245F8-16F7-4719-94F2-72A69A43F961}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02B245F8-16F7-4719-94F2-72A69A43F961}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02B245F8-16F7-4719-94F2-72A69A43F961}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D66311AF-39C7-4944-A697-D267C9AD2684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D66311AF-39C7-4944-A697-D267C9AD2684}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D66311AF-39C7-4944-A697-D267C9AD2684}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,6 +52,10 @@ Global
 		{17F63104-7CCF-42C0-9D3C-90E342C1D782}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17F63104-7CCF-42C0-9D3C-90E342C1D782}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17F63104-7CCF-42C0-9D3C-90E342C1D782}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F422B93A-AB88-4FB9-9659-660F2B28FF70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F422B93A-AB88-4FB9-9659-660F2B28FF70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F422B93A-AB88-4FB9-9659-660F2B28FF70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F422B93A-AB88-4FB9-9659-660F2B28FF70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,9 +63,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{ACE73B3C-99AF-47CA-A139-AC34F848698F} = {59DAD669-3BFA-4779-94B9-71F36174B949}
 		{21F757DA-4DC2-432F-92F3-F99CA865139B} = {CA9AE28F-F5AE-4C8F-A699-27DB3C618BC9}
-		{02B245F8-16F7-4719-94F2-72A69A43F961} = {C5E7D1F7-A882-46C8-8212-B1A58D8D4FB3}
 		{D66311AF-39C7-4944-A697-D267C9AD2684} = {763300BE-EBAE-4477-B865-311C310266BF}
 		{17F63104-7CCF-42C0-9D3C-90E342C1D782} = {C5E7D1F7-A882-46C8-8212-B1A58D8D4FB3}
+		{F422B93A-AB88-4FB9-9659-660F2B28FF70} = {C5E7D1F7-A882-46C8-8212-B1A58D8D4FB3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B109A3C-66B0-4340-B7A9-9F48697627AF}

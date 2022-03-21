@@ -1,0 +1,85 @@
+version: "3.9"
+
+services:
+
+    data:
+        container_name: sqlserver
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports: 
+            - "1433:1433"
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=yourStrongPassword12!@
+        volumes: 
+            - sqldata:/var/opt/mssql 
+        networks: 
+            - masny-microservices-network
+    
+    messages:
+        container_name: rabbitmq
+        image: rabbitmq:3.9-management
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        hostname: "rabbitmq"
+        environment:
+            - RABBITMQ_ERLANG_COOKIE=Rand0mR4bbitMqCo0k1e
+            - RABBITMQ_DEFAULT_USER=rabbitmq
+            - RABBITMQ_DEFAULT_PASS=rabbitmq
+        networks: 
+            - masny-microservices-network
+
+    identity.api:
+        container_name: identity
+        build:
+            context: ./src
+            dockerfile: ./Masny.Microservices.Identity.Api/Dockerfile
+        ports: 
+            - "5011:80"
+        environment:
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=IdentityApi;User Id=sa; Password=yourStrongPassword12!@;MultipleActiveResultSets=true
+            - EventBusSettings__Host=rabbitmq
+            - EventBusSettings__Port=5672
+            - EventBusSettings__VirtualHost=/
+            - EventBusSettings__User=rabbitmq
+            - EventBusSettings__Password=rabbitmq
+        restart: on-failure
+        networks: 
+            - masny-microservices-network
+        depends_on:
+            - data
+            
+    profile.api:
+        container_name: profile
+        build:
+            context: ./src
+            dockerfile: ./Masny.Microservices.Profile.Api/Dockerfile
+        environment:
+            - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ProfileApi;User Id=sa; Password=yourStrongPassword12!@;MultipleActiveResultSets=true
+            - EventBusSettings__Host=rabbitmq
+            - EventBusSettings__Port=5672
+            - EventBusSettings__VirtualHost=/
+            - EventBusSettings__User=rabbitmq
+            - EventBusSettings__Password=rabbitmq
+        restart: on-failure
+        networks: 
+            - masny-microservices-network
+        depends_on:
+            - data
+            
+    gateway.api:
+        container_name: gateway
+        build:
+            context: ./src
+            dockerfile: ./Masny.Microservices.Gateway.Main/Dockerfile
+        ports:
+            - "5053:80"
+        restart: on-failure
+        networks: 
+            - masny-microservices-network
+
+networks:
+    masny-microservices-network:
+
+volumes:
+    sqldata:

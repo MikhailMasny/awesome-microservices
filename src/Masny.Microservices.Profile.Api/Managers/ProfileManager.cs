@@ -15,12 +15,12 @@ namespace Masny.Microservices.Profile.Api.Managers
             _applicationContext = applicationContext ?? throw new ArgumentNullException(nameof(applicationContext));
         }
 
-        public async Task CreateAsync(string accountId)
+        public async Task CreateAsync(string accountId, string fullName)
         {
             var profile = new Data.Models.Profile
             {
                 AccountId = accountId.ToString(),
-                FullName = string.Empty,
+                FullName = fullName,
             };
 
             await _applicationContext.Profiles.AddAsync(profile);

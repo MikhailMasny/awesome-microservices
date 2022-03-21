@@ -3,13 +3,20 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Logging.ClearProviders();
+var logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
-builder.Services.AddOcelot();
-builder.Configuration.AddJsonFile("ocelot.json");
+builder.Logging.AddSerilog(logger);
+
+// Microsoft services
+builder.Services.AddHealthChecks();
+builder.Services.AddCors();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -28,15 +35,33 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Configurations
+builder.Configuration.AddJsonFile("ocelot.json");
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddJsonFile($"ocelot.{builder.Environment.EnvironmentName}.json", optional: true);
+}
+
+// Custom services
+builder.Services.AddOcelot();
+
+// https://medium.com/@niteshsinghal85/3-ways-to-do-authorization-in-ocelot-api-gateway-in-asp-net-core-7ef8301b2f65
+
 var app = builder.Build();
 
-await app.UseOcelot();
+// dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p { password here }
+// dotnet dev-certs https --trust
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseCors(options => options
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod());
 
-app.MapControllers();
+app.MapHealthChecks("/hc");
+
+app.UseOcelot().Wait();
 
 app.Run();
